@@ -1,7 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { Database } from './types'
 
-export const createServerSupabaseClient = () => {
+export const createServerSupabaseClient = (): SupabaseClient<Database> => {
   // Dynamically import cookies only when function is called (in Server Component context)
   const { cookies } = require('next/headers')
   const cookieStore = cookies()
