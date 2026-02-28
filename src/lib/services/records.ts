@@ -2,21 +2,17 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
 
 type AthleteMetricRecord = Database['public']['Tables']['athlete_metric_records']['Row']
+type PerformanceMetric = Database['public']['Tables']['performance_metrics']['Row']
 type AthleteMetricRecordInsert = Database['public']['Tables']['athlete_metric_records']['Insert']
 
-export async function getAthleteRecords(athleteId: string): Promise<AthleteMetricRecord[]> {
+export async function getAthleteRecords(athleteId: string): Promise<(AthleteMetricRecord & { performance_metrics: PerformanceMetric })[]> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
     .select(`
       *,
-      performance_metrics!inner(
-        id,
-        name,
-        category,
-        unit
-      )
+      performance_metrics!inner(*)
     `)
     .eq('athlete_id', athleteId)
     .order('recorded_at', { ascending: false })
