@@ -57,7 +57,7 @@ export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise
   
   const { data, error } = await supabase
     .from('athletes')
-    .update(athlete)
+    .update(athlete as any)
     .eq('id', id)
     .select()
     .single()
