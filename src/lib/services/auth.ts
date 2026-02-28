@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient } from '@/lib/supabase/server-client'
 import { Database } from '@/lib/supabase/types'
 
 type Profile = Database['public']['Tables']['profiles']['Row']
