@@ -1,12 +1,13 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
+import { createClient } from '@supabase/supabase-js'
 
 type Athlete = Database['public']['Tables']['athletes']['Row']
 type AthleteInsert = Database['public']['Tables']['athletes']['Insert']
 type AthleteUpdate = Database['public']['Tables']['athletes']['Update']
 
 export async function getAthletes(): Promise<Athlete[]> {
-  const supabase = createServerSupabaseClient()
+  const supabase: ReturnType<typeof createServerSupabaseClient> = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athletes')
@@ -21,7 +22,7 @@ export async function getAthletes(): Promise<Athlete[]> {
 }
 
 export async function getAthleteById(id: string): Promise<Athlete | null> {
-  const supabase = createServerSupabaseClient()
+  const supabase: ReturnType<typeof createServerSupabaseClient> = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athletes')
@@ -37,7 +38,7 @@ export async function getAthleteById(id: string): Promise<Athlete | null> {
 }
 
 export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
-  const supabase = createServerSupabaseClient()
+  const supabase: ReturnType<typeof createServerSupabaseClient> = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athletes')
@@ -53,7 +54,7 @@ export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
 }
 
 export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise<Athlete> {
-  const supabase = createServerSupabaseClient()
+  const supabase: ReturnType<typeof createServerSupabaseClient> = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athletes')
@@ -70,7 +71,7 @@ export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise
 }
 
 export async function deleteAthlete(id: string): Promise<void> {
-  const supabase = createServerSupabaseClient()
+  const supabase: ReturnType<typeof createServerSupabaseClient> = createServerSupabaseClient()
   
   const { error } = await supabase
     .from('athletes')
