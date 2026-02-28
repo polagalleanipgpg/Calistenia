@@ -1,0 +1,37 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "functions": {},
+  "routes": [
+    {
+      "src": "/app/(auth)/login/page.tsx",
+      "dest": "/login"
+    },
+    {
+      "src": "/app/(auth)/signup/page.tsx", 
+      "dest": "/signup"
+    },
+    {
+      "src": "/app/dashboard/page.tsx",
+      "dest": "/dashboard"
+    },
+    {
+      "src": "/app/dashboard/athletes/page.tsx",
+      "dest": "/dashboard/athletes"
+    },
+    {
+      "src": "/app/dashboard/athletes/new/page.tsx",
+      "dest": "/dashboard/athletes/new"
+    },
+    {
+      "src": "/app/dashboard/athletes/[id]/page.tsx",
+      "dest": "/dashboard/athletes/[id]"
+    },
+    {
+      "src": "/app/dashboard/metrics/page.tsx",
+      "dest": "/dashboard/metrics"
+    }
+  ]
+}
