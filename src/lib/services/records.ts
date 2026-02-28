@@ -46,7 +46,7 @@ export async function createRecord(record: AthleteMetricRecordInsert): Promise<A
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
-    .insert(record)
+    .insert([record] as any)
     .select()
     .single()
 
@@ -54,7 +54,7 @@ export async function createRecord(record: AthleteMetricRecordInsert): Promise<A
     throw new Error(`Error creating record: ${error.message}`)
   }
 
-  return data
+  return data as AthleteMetricRecord
 }
 
 export async function getLatestRecords(limit: number = 5): Promise<AthleteMetricRecord[]> {

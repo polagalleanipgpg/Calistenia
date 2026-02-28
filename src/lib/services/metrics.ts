@@ -42,7 +42,7 @@ export async function createMetric(metric: PerformanceMetricInsert): Promise<Per
   
   const { data, error } = await supabase
     .from('performance_metrics')
-    .insert(metric)
+    .insert([metric] as any)
     .select()
     .single()
 
@@ -50,7 +50,7 @@ export async function createMetric(metric: PerformanceMetricInsert): Promise<Per
     throw new Error(`Error creating metric: ${error.message}`)
   }
 
-  return data
+  return data as PerformanceMetric
 }
 
 export async function updateMetric(id: string, metric: PerformanceMetricUpdate): Promise<PerformanceMetric> {
@@ -58,7 +58,7 @@ export async function updateMetric(id: string, metric: PerformanceMetricUpdate):
   
   const { data, error } = await supabase
     .from('performance_metrics')
-    .update(metric)
+    .update(metric as any)
     .eq('id', id)
     .select()
     .single()
@@ -67,7 +67,7 @@ export async function updateMetric(id: string, metric: PerformanceMetricUpdate):
     throw new Error(`Error updating metric: ${error.message}`)
   }
 
-  return data
+  return data as PerformanceMetric
 }
 
 export async function deleteMetric(id: string): Promise<void> {
