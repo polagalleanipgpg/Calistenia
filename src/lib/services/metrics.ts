@@ -6,7 +6,7 @@ type PerformanceMetricInsert = Database['public']['Tables']['performance_metrics
 type PerformanceMetricUpdate = Database['public']['Tables']['performance_metrics']['Update']
 
 export async function getMetrics(): Promise<PerformanceMetric[]> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('performance_metrics')
@@ -22,7 +22,7 @@ export async function getMetrics(): Promise<PerformanceMetric[]> {
 }
 
 export async function getMetricById(id: string): Promise<PerformanceMetric | null> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('performance_metrics')
@@ -38,7 +38,7 @@ export async function getMetricById(id: string): Promise<PerformanceMetric | nul
 }
 
 export async function createMetric(metric: PerformanceMetricInsert): Promise<PerformanceMetric> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('performance_metrics')
@@ -54,7 +54,7 @@ export async function createMetric(metric: PerformanceMetricInsert): Promise<Per
 }
 
 export async function updateMetric(id: string, metric: PerformanceMetricUpdate): Promise<PerformanceMetric> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('performance_metrics')
@@ -71,7 +71,7 @@ export async function updateMetric(id: string, metric: PerformanceMetricUpdate):
 }
 
 export async function deleteMetric(id: string): Promise<void> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { error } = await supabase
     .from('performance_metrics')

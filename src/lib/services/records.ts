@@ -6,7 +6,7 @@ type PerformanceMetric = Database['public']['Tables']['performance_metrics']['Ro
 type AthleteMetricRecordInsert = Database['public']['Tables']['athlete_metric_records']['Insert']
 
 export async function getAthleteRecords(athleteId: string): Promise<(AthleteMetricRecord & { performance_metrics: PerformanceMetric })[]> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
@@ -25,7 +25,7 @@ export async function getAthleteRecords(athleteId: string): Promise<(AthleteMetr
 }
 
 export async function getMetricRecords(athleteId: string, metricId: string): Promise<AthleteMetricRecord[]> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
@@ -42,7 +42,7 @@ export async function getMetricRecords(athleteId: string, metricId: string): Pro
 }
 
 export async function createRecord(record: AthleteMetricRecordInsert): Promise<AthleteMetricRecord> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
@@ -58,7 +58,7 @@ export async function createRecord(record: AthleteMetricRecordInsert): Promise<A
 }
 
 export async function getLatestRecords(limit: number = 5): Promise<AthleteMetricRecord[]> {
-  const supabase = await createServerSupabaseClient()
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
