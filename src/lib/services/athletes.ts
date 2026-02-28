@@ -41,7 +41,7 @@ export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
   
   const { data, error } = await supabase
     .from('athletes')
-    .insert(athlete)
+    .insert([athlete] as any)
     .select()
     .single()
 
