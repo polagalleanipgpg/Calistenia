@@ -41,7 +41,7 @@ export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
   
   const { data, error } = await supabase
     .from('athletes')
-    .insert([athlete] as any)
+    .insert([athlete])
     .select()
     .single()
 
@@ -49,7 +49,7 @@ export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
     throw new Error(`Error creating athlete: ${error.message}`)
   }
 
-  return data as Athlete
+  return data
 }
 
 export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise<Athlete> {
@@ -57,7 +57,7 @@ export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise
   
   const { data, error } = await supabase
     .from('athletes')
-    .update(athlete as any)
+    .update(athlete)
     .eq('id', id)
     .select()
     .single()
@@ -66,7 +66,7 @@ export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise
     throw new Error(`Error updating athlete: ${error.message}`)
   }
 
-  return data as Athlete
+  return data
 }
 
 export async function deleteAthlete(id: string): Promise<void> {

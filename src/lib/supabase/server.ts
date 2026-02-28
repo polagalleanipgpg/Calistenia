@@ -1,9 +1,9 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 import { Database } from './types'
 
-let supabaseClient: SupabaseClient<Database> | null = null
+let supabaseClient: any = null
 
-export function createServerSupabaseClient(): SupabaseClient<Database> {
+export function createServerSupabaseClient(): any {
   if (!supabaseClient) {
     supabaseClient = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

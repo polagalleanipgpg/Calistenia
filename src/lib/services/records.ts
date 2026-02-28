@@ -54,8 +54,7 @@ export async function createRecord(record: AthleteMetricRecordInsert): Promise<A
     throw new Error(`Error creating record: ${error.message}`)
   }
 
-  return data as AthleteMetricRecord
-}
+  return data
 
 export async function getLatestRecords(limit: number = 5): Promise<AthleteMetricRecord[]> {
   const supabase = createServerSupabaseClient()

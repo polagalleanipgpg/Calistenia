@@ -50,7 +50,7 @@ export async function createMetric(metric: PerformanceMetricInsert): Promise<Per
     throw new Error(`Error creating metric: ${error.message}`)
   }
 
-  return data as PerformanceMetric
+  return data
 }
 
 export async function updateMetric(id: string, metric: PerformanceMetricUpdate): Promise<PerformanceMetric> {
@@ -67,7 +67,7 @@ export async function updateMetric(id: string, metric: PerformanceMetricUpdate):
     throw new Error(`Error updating metric: ${error.message}`)
   }
 
-  return data as PerformanceMetric
+  return data
 }
 
 export async function deleteMetric(id: string): Promise<void> {
