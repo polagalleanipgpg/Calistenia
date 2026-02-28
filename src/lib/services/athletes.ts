@@ -1,7 +1,5 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 
 type Athlete = Database['public']['Tables']['athletes']['Row']
 type AthleteInsert = Database['public']['Tables']['athletes']['Insert']
@@ -39,22 +37,7 @@ export async function getAthleteById(id: string): Promise<Athlete | null> {
 }
 
 export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
-  const cookieStore = cookies()
-  
-  const supabase = createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      global: {
-        headers: {
-          Cookie: cookieStore
-            .getAll()
-            .map(({ name, value }) => `${name}=${value}`)
-            .join('; '),
-        },
-      },
-    }
-  )
+  const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athletes')
