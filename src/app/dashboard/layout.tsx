@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { BottomNav } from '@/components/navigation/bottom-nav'
 
 export default function DashboardLayout({
