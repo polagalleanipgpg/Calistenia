@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import { Database } from '../supabase/types'
 
 export const createServerSupabaseClient = () => {
+  const { cookies } = require('next/headers')
   const cookieStore = cookies()
   
   return createClient<Database>(
