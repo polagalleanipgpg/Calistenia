@@ -1,52 +1,61 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient } from '@/lib/supabase/server-client'
 import { Database } from '@/lib/supabase/types'
 
 type AthleteMetricRecord = Database['public']['Tables']['athlete_metric_records']['Row']
-type PerformanceMetric = Database['public']['Tables']['performance_metrics']['Row']
-type AthleteMetricRecordInsert = Database['public']['Tables']['athlete_metric_records']['Insert']
+type RecordInsert = Database['public']['Tables']['athlete_metric_records']['Insert']
 
-export async function getAthleteRecords(athleteId: string): Promise<(AthleteMetricRecord & { performance_metrics: PerformanceMetric })[]> {
+export async function getRecordsByAthlete(athleteId: string): Promise<AthleteMetricRecord[]> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
     .select(`
       *,
-      performance_metrics!inner(*)
+      performance_metrics (
+        id,
+        name,
+        category,
+        unit
+      )
     `)
     .eq('athlete_id', athleteId)
     .order('recorded_at', { ascending: false })
 
   if (error) {
-    throw new Error(`Error fetching athlete records: ${error.message}`)
+    throw new Error(`Error fetching records: ${error.message}`)
   }
 
   return data || []
 }
 
-export async function getMetricRecords(athleteId: string, metricId: string): Promise<AthleteMetricRecord[]> {
+export async function getRecordsByMetric(metricId: string): Promise<AthleteMetricRecord[]> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
-    .select('*')
-    .eq('athlete_id', athleteId)
+    .select(`
+      *,
+      athletes (
+        id,
+        name
+      )
+    `)
     .eq('metric_id', metricId)
-    .order('recorded_at', { ascending: true })
+    .order('recorded_at', { ascending: false })
 
   if (error) {
-    throw new Error(`Error fetching metric records: ${error.message}`)
+    throw new Error(`Error fetching records: ${error.message}`)
   }
 
   return data || []
 }
 
-export async function createRecord(record: AthleteMetricRecordInsert): Promise<AthleteMetricRecord> {
+export async function createRecord(record: RecordInsert): Promise<AthleteMetricRecord> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
-    .insert([record] as any)
+    .insert(record)
     .select()
     .single()
 
@@ -57,51 +66,70 @@ export async function createRecord(record: AthleteMetricRecordInsert): Promise<A
   return data
 }
 
-export async function getLatestRecords(limit: number = 5): Promise<AthleteMetricRecord[]> {
+export async function getRecentRecords(limit: number = 10): Promise<AthleteMetricRecord[]> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('athlete_metric_records')
     .select(`
       *,
-      athletes!inner(
+      athletes (
         id,
         name
       ),
-      performance_metrics!inner(
+      performance_metrics (
         id,
         name,
         unit
       )
     `)
-    .order('created_at', { ascending: false })
+    .order('recorded_at', { ascending: false })
     .limit(limit)
 
   if (error) {
-    throw new Error(`Error fetching latest records: ${error.message}`)
+    throw new Error(`Error fetching recent records: ${error.message}`)
   }
 
   return data || []
 }
 
-export async function getMetricProgress(athleteId: string, metricId: string) {
-  const records = await getMetricRecords(athleteId, metricId)
+export async function getProgressStats(athleteId: string, metricId: string): Promise<{
+  firstRecord: number | null
+  lastRecord: number | null
+  difference: number | null
+  percentageChange: number | null
+}> {
+  const supabase = createServerSupabaseClient()
   
-  if (records.length === 0) {
-    return null
+  const { data, error } = await supabase
+    .from('athlete_metric_records')
+    .select('value')
+    .eq('athlete_id', athleteId)
+    .eq('metric_id', metricId)
+    .order('recorded_at', { ascending: true })
+
+  if (error) {
+    throw new Error(`Error fetching progress stats: ${error.message}`)
   }
 
-  const firstRecord = records[0]
-  const lastRecord = records[records.length - 1]
-  const difference = lastRecord.value - firstRecord.value
-  const percentageChange = firstRecord.value !== 0 ? (difference / firstRecord.value) * 100 : 0
+  if (!data || data.length === 0) {
+    return {
+      firstRecord: null,
+      lastRecord: null,
+      difference: null,
+      percentageChange: null
+    }
+  }
+
+  const firstRecord = data[0].value
+  const lastRecord = data[data.length - 1].value
+  const difference = lastRecord - firstRecord
+  const percentageChange = firstRecord !== 0 ? (difference / firstRecord) * 100 : 0
 
   return {
-    firstMeasurement: firstRecord.value,
-    lastMeasurement: lastRecord.value,
-    absoluteDifference: difference,
-    percentageChange: Math.round(percentageChange * 100) / 100,
-    totalRecords: records.length,
-    records
+    firstRecord,
+    lastRecord,
+    difference,
+    percentageChange
   }
 }

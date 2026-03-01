@@ -1,9 +1,9 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient } from '@/lib/supabase/server-client'
 import { Database } from '@/lib/supabase/types'
 
 type PerformanceMetric = Database['public']['Tables']['performance_metrics']['Row']
-type PerformanceMetricInsert = Database['public']['Tables']['performance_metrics']['Insert']
-type PerformanceMetricUpdate = Database['public']['Tables']['performance_metrics']['Update']
+type MetricInsert = Database['public']['Tables']['performance_metrics']['Insert']
+type MetricUpdate = Database['public']['Tables']['performance_metrics']['Update']
 
 export async function getMetrics(): Promise<PerformanceMetric[]> {
   const supabase = createServerSupabaseClient()
@@ -37,12 +37,12 @@ export async function getMetricById(id: string): Promise<PerformanceMetric | nul
   return data
 }
 
-export async function createMetric(metric: PerformanceMetricInsert): Promise<PerformanceMetric> {
+export async function createMetric(metric: MetricInsert): Promise<PerformanceMetric> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('performance_metrics')
-    .insert([metric] as any)
+    .insert(metric)
     .select()
     .single()
 
@@ -53,12 +53,12 @@ export async function createMetric(metric: PerformanceMetricInsert): Promise<Per
   return data
 }
 
-export async function updateMetric(id: string, metric: PerformanceMetricUpdate): Promise<PerformanceMetric> {
+export async function updateMetric(id: string, metric: MetricUpdate): Promise<PerformanceMetric> {
   const supabase = createServerSupabaseClient()
   
   const { data, error } = await supabase
     .from('performance_metrics')
-    .update(metric as any)
+    .update(metric)
     .eq('id', id)
     .select()
     .single()

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient } from '@/lib/supabase/server-client'
 import { Database } from '@/lib/supabase/types'
 
 type Athlete = Database['public']['Tables']['athletes']['Row']
@@ -41,7 +41,7 @@ export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
   
   const { data, error } = await supabase
     .from('athletes')
-    .insert([athlete])
+    .insert(athlete)
     .select()
     .single()
 
