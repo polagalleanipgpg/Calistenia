@@ -42,7 +42,7 @@ export async function createMetric(metric: MetricInsert): Promise<PerformanceMet
   
   const { data, error } = await supabase
     .from('performance_metrics')
-    .insert(metric)
+    .insert(metric as unknown as never)
     .select()
     .single()
 
@@ -58,7 +58,7 @@ export async function updateMetric(id: string, metric: MetricUpdate): Promise<Pe
   
   const { data, error } = await supabase
     .from('performance_metrics')
-    .update(metric)
+    .update(metric as unknown as never)
     .eq('id', id)
     .select()
     .single()

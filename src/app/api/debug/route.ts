@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   const bucket = url.searchParams.get('bucket')
   const path = url.searchParams.get('path')
 
-  const out: any = {
+  const out: Record<string, unknown> = {
     env: {
       urlPresent: !!SUPABASE_URL,
       anonPresent: !!SUPABASE_ANON,
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
       .limit(1)
 
     out.serviceQuery = { status, error: error ? { message: error.message } : null, data }
-  } catch (e: any) {
+  } catch (e: unknown) {
     out.serviceQuery = { error: String(e) }
   }
 
@@ -46,29 +46,34 @@ export async function GET(req: Request) {
       .limit(1)
 
     out.anonQuery = { status, error: error ? { message: error.message } : null, data }
-  } catch (e: any) {
+  } catch (e: unknown) {
     out.anonQuery = { error: String(e) }
   }
 
   // Optional: Storage checks if bucket+path provided
   if (bucket && path) {
-    out.storage = {}
     try {
-      const publicUrl = `${SUPABASE_URL.replace(/\/+$/, '')}/storage/v1/object/public/${bucket}/${encodeURIComponent(path)}`
+      const base = SUPABASE_URL.endsWith('/') ? SUPABASE_URL.slice(0, -1) : SUPABASE_URL
+      const publicUrl = `${base}/storage/v1/object/public/${bucket}/${encodeURIComponent(path)}`
       const head = await fetch(publicUrl, { method: 'HEAD' })
-      out.storage.publicHead = { status: head.status, statusText: head.statusText }
-    } catch (e: any) {
-      out.storage.publicHeadError = String(e)
+      out.storage = { publicHead: { status: head.status, statusText: head.statusText } }
+    } catch (e: unknown) {
+      out.storage = { publicHeadError: String(e) }
     }
 
     try {
       // createSignedUrl returns { signedUrl }
-      // @ts-ignore
       const { data, error } = await serviceClient.storage.from(bucket).createSignedUrl(path, 60)
-      out.storage.signedUrl = data?.signedUrl ?? null
-      out.storage.signedUrlError = error ? { message: error.message } : null
-    } catch (e: any) {
-      out.storage.signedUrlError = String(e)
+      out.storage = {
+        ...(typeof out.storage === 'object' && out.storage ? (out.storage as Record<string, unknown>) : {}),
+        signedUrl: data?.signedUrl ?? null,
+        signedUrlError: error ? { message: error.message } : null,
+      }
+    } catch (e: unknown) {
+      out.storage = {
+        ...(typeof out.storage === 'object' && out.storage ? (out.storage as Record<string, unknown>) : {}),
+        signedUrlError: String(e),
+      }
     }
   }
 

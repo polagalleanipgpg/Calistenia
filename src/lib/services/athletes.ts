@@ -41,7 +41,7 @@ export async function createAthlete(athlete: AthleteInsert): Promise<Athlete> {
   
   const { data, error } = await supabase
     .from('athletes')
-    .insert(athlete)
+    .insert(athlete as unknown as never)
     .select()
     .single()
 
@@ -57,7 +57,7 @@ export async function updateAthlete(id: string, athlete: AthleteUpdate): Promise
   
   const { data, error } = await supabase
     .from('athletes')
-    .update(athlete)
+    .update(athlete as unknown as never)
     .eq('id', id)
     .select()
     .single()

@@ -133,3 +133,8 @@ export async function getProgressStats(athleteId: string, metricId: string): Pro
     percentageChange
   }
 }
+
+// Convenience alias used by dashboard
+export async function getLatestRecords(limit: number = 10): Promise<AthleteMetricRecord[]> {
+  return getRecentRecords(limit)
+}

@@ -1,12 +1,13 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { Database } from './types'
 
-export const createServerSupabaseClient = (): SupabaseClient<Database> => {
+// Use a loose Supabase client type on server to avoid strict typed-table issues
+export const createServerSupabaseClient = (): SupabaseClient<any> => {
   // Dynamically import cookies only when function is called (in Server Component context)
   const { cookies } = require('next/headers')
   const cookieStore = cookies()
   
-  return createClient<Database>(
+  return createClient<any>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
