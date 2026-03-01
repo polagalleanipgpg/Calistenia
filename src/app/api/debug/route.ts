@@ -9,6 +9,11 @@ const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE)
 const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON)
 
 export async function GET(req: Request) {
+  // Never expose debug info in production
+  if (process.env.NODE_ENV === 'production') {
+    return new NextResponse(null, { status: 404 })
+  }
+
   const url = new URL(req.url)
   const bucket = url.searchParams.get('bucket')
   const path = url.searchParams.get('path')
@@ -18,7 +23,6 @@ export async function GET(req: Request) {
       urlPresent: !!SUPABASE_URL,
       anonPresent: !!SUPABASE_ANON,
       servicePresent: !!SUPABASE_SERVICE,
-      supabaseUrl: SUPABASE_URL || null,
     },
   }
 
@@ -29,7 +33,7 @@ export async function GET(req: Request) {
       .select('id,name,trainer_id')
       .limit(1)
 
-    out.serviceQuery = { status, error: error ? { message: error.message, details: error.details } : null, data }
+    out.serviceQuery = { status, error: error ? { message: error.message } : null, data }
   } catch (e: any) {
     out.serviceQuery = { error: String(e) }
   }
@@ -41,7 +45,7 @@ export async function GET(req: Request) {
       .select('id,name,trainer_id')
       .limit(1)
 
-    out.anonQuery = { status, error: error ? { message: error.message, details: error.details } : null, data }
+    out.anonQuery = { status, error: error ? { message: error.message } : null, data }
   } catch (e: any) {
     out.anonQuery = { error: String(e) }
   }
