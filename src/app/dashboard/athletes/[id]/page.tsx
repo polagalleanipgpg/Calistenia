@@ -29,7 +29,7 @@ export default async function AthletePage({ params }: Props) {
       <AthleteDetail 
         athlete={athlete} 
         records={records} 
-        metrics={metrics} 
+        availableMetrics={metrics} 
       />
       <FloatingActionButtons />
     </div>
