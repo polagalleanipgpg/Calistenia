@@ -6,12 +6,11 @@ import { Avatar } from '@/components/ui/avatar'
 import { ArrowLeft, Plus, TrendingUp } from 'lucide-react'
 
 type Athlete = Database['public']['Tables']['athletes']['Row']
-type AthleteMetricRecord = Database['public']['Tables']['athlete_metric_records']['Row']
 type PerformanceMetric = Database['public']['Tables']['performance_metrics']['Row']
 
 interface AthleteDetailProps {
   athlete: Athlete
-  records: (AthleteMetricRecord & { performance_metrics: PerformanceMetric })[]
+  records: any[]
   availableMetrics: PerformanceMetric[]
 }
 
